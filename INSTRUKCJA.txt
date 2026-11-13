@@ -5,7 +5,7 @@ Wszystko jest już ustawione – nie edytujesz żadnych plików.
   Sieć:             Base
   Kontrakt:         0x60887F44Bb835F34c7A2b5F195F65D20C599132b  (stały, wyliczony z góry)
   Admin:            0x89c078659AAbB231DA92aFc4C8506ea1c52206d1
-  Opłaty trafiają:  0xfB41fBa3115082CB95C5E06d0aaf703e3fCae152
+  Opłaty trafiają:  0x89c078659AAbB231DA92aFc4C8506ea1c52206d1 (ustaw raz w panelu Admin → Fee recipient → Save)
   Cena wiadomości:  0,50 USDC (admin może zmienić w panelu „Admin”)
   Język aplikacji:  angielski
   Odczyt:           za darmo

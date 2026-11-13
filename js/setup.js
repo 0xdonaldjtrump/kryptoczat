@@ -10,7 +10,7 @@
   $('netName').textContent = net.name;
   $('cAddr').textContent = net.contract;
   $('cAdmin').textContent = KC.admin;
-  $('cTreasury').textContent = KC.treasury;
+  $('cTreasury').textContent = '—';
   $('homeLink').href = U.withNet('index.html');
   $('openApp').href = U.withNet('index.html');
   if (chainId !== KC.defaultChainId) {
@@ -30,7 +30,11 @@
     try {
       const ro = new E.JsonRpcProvider(net.rpc, chainId, { staticNetwork: true });
       const code = await Promise.race([ro.getCode(net.contract), new Promise((_, r) => setTimeout(() => r(new Error('timeout')), 7000))]);
-      if (code !== '0x') return done();
+      if (code !== '0x') {
+        try { $('cTreasury').textContent = await new E.Contract(net.contract, KC.abi, ro).treasury(); } catch (e) { /* ignore */ }
+        return done();
+      }
+      $('cTreasury').textContent = KC.admin;
       status('The contract is not deployed yet.');
     } catch (e) {
       status('Could not check the network – connect your wallet to check through it.');

@@ -413,7 +413,8 @@
         return { f, i, b };
       };
       const price = field('Price per message (USDC)', E.formatUnits(S.price, 6), { type: 'number', step: '0.01', min: '0' });
-      const tre = field('Fee recipient address', treasury, { spellcheck: false });
+      const moveFees = lc(treasury) !== lc(KC.admin);
+      const tre = field(moveFees ? 'Fee recipient – click Save to send fees to your admin wallet' : 'Fee recipient address', moveFees ? KC.admin : treasury, { spellcheck: false });
       tre.i.className = 'mono';
       const len = field('Max message size (bytes, ~1 byte = 1 character)', String(S.maxLen), { type: 'number', step: '1', min: '100' });
       const pause = document.createElement('button');
