@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KryptoCzat – wallet-to-wallet messages</title>
+<meta name="description" content="Send an encrypted message to any crypto wallet address. Base network, paid in USDC.">
+<meta name="theme-color" content="#151821">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237c5cff'/%3E%3Cpath d='M8 10h16v10H14l-5 4v-4H8z' fill='white'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="logo"><span class="dot">✉</span>KryptoCzat</div>
+  <span class="badge" id="netBadge">Base</span>
+  <span class="spacer"></span>
+  <div id="topUser" class="hidden" style="display:flex;align-items:center;gap:8px">
+    <span class="muted hide-sm" id="usdcBal" style="font-size:13px"></span>
+    <div class="chip" id="accountChip" title="Your wallet"><span class="avatar" id="meAvatar"></span><span class="mono addr-text" id="meAddr"></span></div>
+    <div class="top-actions">
+      <button class="ghost small" id="btnMyLink" title="Copy a link people can use to message you">🔗<span class="hide-sm"> My link</span></button>
+      <button class="ghost small hidden" id="btnAdmin">⚙<span class="hide-sm"> Admin</span></button>
+    </div>
+  </div>
+</header>
+
+<!-- loading -->
+<section class="center" id="scrLoading"><div class="muted"><span class="spinner"></span>Loading…</div></section>
+
+<!-- no wallet -->
+<section class="center hidden" id="scrNoWallet">
+  <div class="card">
+    <h1>You need a wallet</h1>
+    <p class="muted">KryptoCzat works with a browser wallet such as <b>MetaMask</b>, Rabby or Coinbase Wallet.</p>
+    <p><b>On desktop:</b> install the <a href="https://metamask.io/download/" target="_blank" rel="noopener">MetaMask</a> extension and reload this page.</p>
+    <p><b>On mobile:</b> open this page in the browser built into the MetaMask app.</p>
+    <a id="mmDeepLink" href="#"><button>Open in the MetaMask app</button></a>
+  </div>
+</section>
+
+<!-- contract not deployed yet -->
+<section class="center hidden" id="scrNotDeployed">
+  <div class="card">
+    <h1>KryptoCzat is not live yet</h1>
+    <p class="muted">The KryptoCzat contract has not been deployed on <b class="netName"></b> yet. Launching is a one-time step that takes a minute.</p>
+    <a id="setupLink" href="setup.html"><button>Go to setup</button></a>
+  </div>
+</section>
+
+<!-- connect wallet -->
+<section class="center hidden" id="scrConnect">
+  <div class="card">
+    <h1>Wallet-to-wallet messages</h1>
+    <p class="muted">Message any address on Base. Messages are end-to-end encrypted and stored on-chain – only the sender and the recipient can read them.</p>
+    <div class="prices">
+      <div class="price"><span class="muted">Send</span><b id="pPrice">0,50 USDC</b></div>
+      <div class="price"><span class="muted">Read</span><b>free</b></div>
+    </div>
+    <button id="btnConnect" style="width:100%">Connect wallet</button>
+    <ol class="steps">
+      <li>Connect your wallet (MetaMask) – Base is selected automatically.</li>
+      <li>Sign a message to unlock your inbox (free).</li>
+      <li>To send, you need some USDC and a little ETH for gas on Base.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- unlock -->
+<section class="center hidden" id="scrUnlock">
+  <div class="card">
+    <h1>Unlock your inbox</h1>
+    <p class="muted">Your wallet will ask for a signature. It is free and sends no transaction – the signature restores your private encryption key. You sign again on each visit.</p>
+    <button id="btnUnlock" style="width:100%">Sign and unlock</button>
+    <p class="muted" style="font-size:13px;margin-bottom:0">Connected: <span class="mono" id="unlockAddr"></span></p>
+  </div>
+</section>
+
+<!-- app -->
+<main class="app hidden" id="scrApp">
+  <aside class="sidebar">
+    <div class="side-head">
+      <button id="btnNew" style="flex:1">＋ New chat</button>
+      <button class="ghost" id="btnRefresh" title="Refresh">⟳</button>
+    </div>
+    <div class="newchat hidden" id="newChat">
+      <input id="newAddr" placeholder="Wallet address 0x…" autocomplete="off" spellcheck="false">
+      <div class="row"><button class="small" id="newGo" style="flex:1">Open chat</button><button class="ghost small" id="newCancel">Cancel</button></div>
+    </div>
+    <div id="keyBanner" class="banner hidden">
+      Your inbox is not activated yet – others can only send you public messages. It activates automatically with your first message, or right now (gas only, a fraction of a cent).
+      <br><button class="small teal" id="btnActivate">Activate inbox</button>
+    </div>
+    <div class="convos" id="convos"></div>
+  </aside>
+  <section class="chat" id="chat">
+    <div class="placeholder" id="chatPlaceholder">Pick a chat or start a new one.<br>Share “My link” so people can easily message you.</div>
+    <div class="chat-head hidden" id="chatHead">
+      <button class="ghost small back" id="btnBack">←</button>
+      <span class="avatar" id="peerAvatar"></span>
+      <div style="min-width:0;flex:1">
+        <div class="title mono" id="peerAddr"></div>
+        <div class="sub" id="peerSub"></div>
+      </div>
+      <button class="ghost small" id="btnCopyPeer" title="Copy address">⧉</button>
+    </div>
+    <div class="messages hidden" id="messages"></div>
+    <div class="composer hidden" id="composer">
+      <textarea id="msgInput" rows="1" placeholder="Write a message…" maxlength="2000"></textarea>
+      <button class="send" id="btnSend">Send<span class="hide-sm"> · <span id="sendPriceLbl">0,50 USDC</span></span></button>
+    </div>
+    <div class="composer-info hidden" id="composerInfo"></div>
+  </section>
+</main>
+
+<div class="toasts" id="toasts"></div>
+<div id="modalRoot"></div>
+
+<script src="lib/ethers.umd.min.js"></script>
+<script src="lib/nacl-fast.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/chatcrypto.js"></script>
+<script src="js/common.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

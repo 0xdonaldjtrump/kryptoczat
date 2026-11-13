@@ -1,0 +1,84 @@
+KRYPTOCZAT – INSTRUKCJA URUCHOMIENIA
+=====================================
+
+Wszystko jest już ustawione – nie edytujesz żadnych plików.
+  Sieć:             Base
+  Kontrakt:         0x60887F44Bb835F34c7A2b5F195F65D20C599132b  (stały, wyliczony z góry)
+  Admin:            0x89c078659AAbB231DA92aFc4C8506ea1c52206d1
+  Opłaty trafiają:  0xfB41fBa3115082CB95C5E06d0aaf703e3fCae152
+  Cena wiadomości:  0,50 USDC (admin może zmienić w panelu „Admin”)
+  Język aplikacji:  angielski
+  Odczyt:           za darmo
+
+Jak to działa
+-------------
+- Treść wiadomości zapisuje się w blockchainie Base. Jeśli odbiorca ma aktywną
+  skrzynkę, wiadomość jest szyfrowana end-to-end (czytają ją tylko nadawca i odbiorca).
+- Skrzynka aktywuje się sama przy pierwszej wysłanej wiadomości (albo przyciskiem
+  „Activate inbox”). Do portfela, który nigdy nie był na stronie, można wysłać tylko
+  wiadomość JAWNĄ (strona ostrzega) – najlepiej krótkie zaproszenie.
+- Strona to same pliki statyczne – nie ma serwera ani bazy danych.
+
+KROK 1 – Wrzuć stronę do internetu (IPFS)
+-----------------------------------------
+Wrzucasz CAŁY folder „kryptoczat” (z podfolderami css, js, lib).
+
+Najprościej – PinMe (bez zakładania konta):
+  1. Wejdź na https://pinme.eth.limo (albo wyszukaj „PinMe IPFS”).
+  2. Przeciągnij folder „kryptoczat” na stronę i poczekaj na wgranie.
+  3. Dostaniesz link do strony – zapisz go.
+
+Albo Pinata (darmowe konto, pliki bezpieczniej przechowane):
+  1. Załóż konto na https://pinata.cloud
+  2. Upload → Folder → wybierz folder „kryptoczat”.
+  3. Kliknij wgrany folder – otworzy się link do strony (…/ipfs/<CID>/).
+
+Wskazówka: plik może trzymać kilka serwisów naraz – po wgraniu w jednym możesz w drugim
+„przypiąć” ten sam CID. Wtedy strona nie zniknie, gdy któryś serwis się zamknie.
+
+(Ten sam folder działa też na każdym zwykłym hostingu, np. home.pl, Netlify, GitHub Pages
+– wystarczy skopiować pliki.)
+
+KROK 2 – Przygotuj portfel admina (0x89c0…06d1)
+-----------------------------------------------
+Na uruchomienie potrzebujesz odrobiny ETH w sieci Base na gaz (wdrożenie kosztuje zwykle
+kilka–kilkadziesiąt groszy). Kup ETH na giełdzie i przy wypłacie wybierz sieć „Base”.
+Uwaga: uruchomić może DOWOLNY portfel z ETH – adminem i odbiorcą opłat i tak zostaną
+adresy wpisane powyżej.
+
+KROK 3 – Uruchom kontrakt (jednorazowo)
+---------------------------------------
+  1. Otwórz w przeglądarce z MetaMaskiem:  <twój link>/setup.html
+  2. Kliknij „Connect wallet and launch” i zatwierdź transakcję w MetaMasku.
+     Sieć Base doda się / przełączy sama.
+  3. Po kilku sekundach zobaczysz „✅ KryptoCzat is live on Base”. Gotowe.
+
+KROK 4 – Korzystanie
+--------------------
+  - Komunikator:     <twój link>/index.html (albo sam <twój link>/)
+  - „My link” (u góry) kopiuje adres typu …/index.html?to=0xTwójAdres – wyślij go
+    komuś, a otworzy się od razu rozmowa z Tobą.
+  - Użytkownik potrzebuje: USDC w sieci Base (0,50 za wiadomość) + odrobinę ETH na gaz.
+  - Za pierwszym razem MetaMask poprosi o zgodę na pobieranie opłat (do 10 USDC
+    = ok. 20 wiadomości), potem każda wiadomość to jedna transakcja.
+  - Na telefonie: otwórz link w przeglądarce wbudowanej w aplikację MetaMask.
+
+PANEL ADMINA
+------------
+Gdy połączysz portfel 0x89c0…06d1, u góry pojawi się „⚙ Admin” (Admin panel):
+zmiana ceny, adresu na opłaty, limitu długości wiadomości, wstrzymanie/wznowienie wysyłki.
+
+TEST BEZ PRAWDZIWYCH PIENIĘDZY (opcjonalnie)
+--------------------------------------------
+Dopisz do linków ?net=84532 – np. <twój link>/setup.html?net=84532
+To sieć testowa Base Sepolia (testowe ETH i testowe USDC z kranu Circle: faucet.circle.com).
+
+PLIKI
+-----
+  index.html, setup.html      – strony
+  css/style.css               – wygląd
+  js/config.js                – adresy i ustawienia (wygenerowane, nie zmieniaj)
+  js/deploy-data.js           – dane do jednorazowego wdrożenia kontraktu
+  js/app.js, setup.js, common.js, chatcrypto.js – logika
+  lib/                        – biblioteki ethers.js i tweetnacl (lokalnie, bez CDN)
+  contracts/PaidMessenger.sol – kod źródłowy kontraktu (do wglądu)

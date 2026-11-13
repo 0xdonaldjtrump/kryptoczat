@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KryptoCzat – setup</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237c5cff'/%3E%3Cpath d='M8 10h16v10H14l-5 4v-4H8z' fill='white'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="logo"><span class="dot">✉</span>KryptoCzat</div>
+  <span class="badge" id="netBadge">Base</span>
+  <span class="spacer"></span>
+  <a href="index.html" id="homeLink" class="muted" style="font-size:14px">Open app →</a>
+</header>
+<section class="center">
+  <div class="card">
+    <h1>Launch KryptoCzat</h1>
+    <p class="muted">A one-time deployment of the KryptoCzat contract on <b id="netName"></b>. All settings are built in – it always lands at the same address.</p>
+    <div class="stat mono" style="font-size:13px;word-break:break-all">
+      <div><span class="muted">Contract:</span> <span id="cAddr"></span></div>
+      <div><span class="muted">Admin:</span> <span id="cAdmin"></span></div>
+      <div><span class="muted">Fees go to:</span> <span id="cTreasury"></span></div>
+      <div><span class="muted">Price per message:</span> 0.50 USDC</div>
+    </div>
+    <div id="status" class="muted" style="margin:12px 0">Checking…</div>
+    <button id="btnDeploy" style="width:100%" class="hidden">Connect wallet and launch</button>
+    <a id="openApp" class="hidden" href="index.html"><button class="teal" style="width:100%">Open KryptoCzat</button></a>
+    <p class="muted" style="font-size:13px;line-height:1.6;margin-bottom:0">Any wallet with a little ETH on Base can deploy it (usually a fraction of a dollar) – the admin and fee recipient are always the addresses shown above.
+      Test without real money: <a id="testLink" href="setup.html?net=84532">Base Sepolia testnet version</a>.</p>
+  </div>
+</section>
+<div class="toasts" id="toasts"></div>
+<div id="modalRoot"></div>
+<script src="lib/ethers.umd.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/deploy-data.js"></script>
+<script src="js/common.js"></script>
+<script src="js/setup.js"></script>
+</body>
+</html>
